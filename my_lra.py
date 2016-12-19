@@ -28,6 +28,7 @@ def proto_lra(proto_input, weight_input, proto_output, lra_map):
 
                     if i != 1:
                         conv_layers[i].convolution_param.kernel_size[0] = 1
+                        conv_layers[i].convolution_param.pad[0] = 0
                         conv_layers[i].convolution_param.stride.__delitem__(0)
                     conv_layers[i].convolution_param.num_output = num_outputs[i]
                     conv_layers[i].name = layer.name + '_lra_' + 'abc'[i]
@@ -132,6 +133,7 @@ def weight_lra(proto_input, weight_input, proto_output, weight_output, lra_map):
                 if layer.name in caffe_net.params:
                     print ('%s has exactly same dimension as original layer. Abort svd for this layer' % layer.name)
                     for i, param in enumerate(caffe_net.params[layer.name]):
+                        print (layer.blobs[i].shape.dim,param.data.shape)
                         param.data[:] = np.array(layer.blobs[i].data).reshape(param.data.shape)
                     continue
                 tensor = np.array(layer.blobs[0].data).reshape(layer.blobs[0].shape.dim)

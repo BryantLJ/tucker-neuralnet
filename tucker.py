@@ -79,7 +79,7 @@ def GLRAM(tensor, r3, r4, num_iter=500, error_print=False):
 
   M = M.reshape(r4, r3, *orig_dims[2:])
   print ('M', M.shape, 'L', L.shape, 'R', R.shape)
-  return (M, L, R)
+  return (M, L, R.T)
 
 def trunc_svd(tensor, r):
   if min(tensor.shape) < r:
