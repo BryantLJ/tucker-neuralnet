@@ -80,3 +80,13 @@ def GLRAM(tensor, r3, r4, num_iter=500, error_print=False):
   M = M.reshape(r4, r3, *orig_dims[2:])
   print ('M', M.shape, 'L', L.shape, 'R', R.shape)
   return (M, L, R)
+
+def trunc_svd(tensor, r):
+  if min(tensor.shape) < r:
+    raise ValueError('Size can\'t be larger than original size')
+  U, s, Vh = lin.svd(tensor, False)
+  s = np.eye(s.shape[0]) * s
+  s2 = np.sqrt(s)
+  U = U.dot(s2)[:, :r]
+  Vh = s2.dot(Vh)[:r, :]
+  return U, Vh

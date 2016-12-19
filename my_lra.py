@@ -134,7 +134,11 @@ def weight_lra(proto_input, weight_input, proto_output, weight_output, lra_map):
                     for i, param in enumerate(caffe_net.params[layer.name]):
                         param.data[:] = np.array(layer.blobs[i].data).reshape(param.data.shape)
                     continue
-                print ('Not Implemented yet')
+                tensor = np.array(layer.blobs[0].data).reshape(layer.blobs[0].shape.dim)
+                Us, sVh = tucker.trunc_svd(tensor, lra_map[layer.name])
+                caffe_net.params[layer.name + '_svd_a'][0].data[:] = sVh
+                caffe_net.params[layer.name + '_svd_b'][0].data[:] = Us
+                caffe_net.params[layer.name + '_svd_b'][1].data[:] = layer.blobs[1].data
             else:
                 print ('Error processing layer $s: Type %s is not supported.' % (layer.name, layer.type))
                   
